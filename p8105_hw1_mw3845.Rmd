@@ -12,13 +12,13 @@ library(tidyverse)
 
 ## Problem 1
 
-```{r load dataset penguins}
+```{r problem1 - load dataset penguins}
 data("penguins", package = "palmerpenguins")
 ```
 
 The dataset `penguins` contains 8 variables including `species`, `island`, `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, `body_mass_g`, `sex`, `year`. This dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean of `flipper_length_mm` is `r mean(penguins$flipper_length_mm, na.rm=TRUE)`.
 
-```{r scatterplot_flipperLength_vs_billLength}
+```{r problem1 - scatterplot_flipperLength_vs_billLength}
 plot_df = tibble(
   x = penguins$bill_length_mm,
   y = penguins$flipper_length_mm
@@ -32,8 +32,8 @@ ggsave('bill vs flipper.png')
 ```
 ## Problem 2
 
-Generating dataframe containing different types of variables.
-```{r generate 4x10 dataframe}
+###### Generating dataframe containing different types of variables:
+```{r problem2 - generate 4x10 dataframe}
 set.seed(123)
 
 standard_normal_vec = rnorm(10, mean = 0, sd = 1)
@@ -47,4 +47,25 @@ df = data.frame(
   character_var = character_vec,
   factor_var = factor_vec
 )
+```
+
+###### Mean of each variable in dataframe
+
+For thses four types of variables, we can only take mean of `standard_normal_var` and `positive_logical_var` because `character_var` and `factor_var` are not numerical nor logical.
+
+```{r problem2 - taking mean of each variable}
+df %>% pull(standard_normal_var) %>% mean() # taking mean of standard_normal_var
+df %>% pull(positive_logical_var) %>% mean() # taking mean of positive_logical_var
+df %>% pull(character_var) %>% mean() # taking mean of character_var; FAILED
+df %>% pull(factor_var) %>% mean() # taking mean of factor_var; FAILED
+```
+
+###### Convert variables to numeric:
+
+Here we attempt to convert `positive_logical_var`, `character_var`, and `factor_var` to numeric variable using `as.numeric`:
+
+```{r problem2 - convert variables to numeric}
+df %>% pull(positive_logical_var) %>% as.numeric()
+df %>% pull(character_var) %>% as.numeric()
+df %>% pull(factor_var) %>% as.numeric()
 ```
