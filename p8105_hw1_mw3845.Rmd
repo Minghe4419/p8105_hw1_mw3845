@@ -19,11 +19,6 @@ data("penguins", package = "palmerpenguins")
 The dataset `penguins` contains 8 variables including `species`, `island`, `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, `body_mass_g`, `sex`, `year`. This dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean of `flipper_length_mm` is `r mean(penguins$flipper_length_mm, na.rm=TRUE)`.
 
 ```{r problem1 - scatterplot_flipperLength_vs_billLength}
-plot_df = tibble(
-  x = penguins$bill_length_mm,
-  y = penguins$flipper_length_mm
-)
-
 ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) + 
   geom_point() +
   labs(title = "Bill length(mm) vs Flipper length(mm)")
@@ -34,13 +29,16 @@ ggsave('bill vs flipper.png')
 
 ###### Generating dataframe containing different types of variables:
 ```{r problem2 - generate 4x10 dataframe}
+library(tidyverse)
 set.seed(123)
 
+#generate 4 types of variables
 standard_normal_vec = rnorm(10, mean = 0, sd = 1)
 positive_logical_vec = standard_normal_vec > 0
 character_vec = c('milk', 'cheese', 'egg', 'banana', 'apple', 'toast', 'orange juice', 'peanut butter', 'cucumber',  'coffee')
 factor_vec = factor(sample(c('low', 'medium', 'high'), size = 10, replace = TRUE))
 
+#merge variables into the dataframe
 df = data.frame(
   standard_normal_var = standard_normal_vec,
   positive_logical_var = positive_logical_vec,
@@ -54,17 +52,24 @@ df = data.frame(
 For thses four types of variables, we can only take mean of `standard_normal_var` and `positive_logical_var` because `character_var` and `factor_var` are not numerical nor logical.
 
 ```{r problem2 - taking mean of each variable}
-df %>% pull(standard_normal_var) %>% mean() # taking mean of standard_normal_var
-df %>% pull(positive_logical_var) %>% mean() # taking mean of positive_logical_var
-df %>% pull(character_var) %>% mean() # taking mean of character_var; FAILED
-df %>% pull(factor_var) %>% mean() # taking mean of factor_var; FAILED
+#taking mean of 4 varibales
+df %>% pull(standard_normal_var) %>% mean()
+df %>% pull(positive_logical_var) %>% mean()
+df %>% pull(character_var) %>% mean() #FAILED
+df %>% pull(factor_var) %>% mean() #FAILED
 ```
 
 ###### Convert variables to numeric:
 
 Here we attempt to convert `positive_logical_var`, `character_var`, and `factor_var` to numeric variable using `as.numeric`:
 
-```{r problem2 - convert variables to numeric}
+Logical and factor variable can be converted to numerical variables, while the character variable are converted into NAs.
+
+- `positive_logical_var` can be converted to numeric because R treats logical values as `TRUE=1` and `FALSE=0`.
+- `character_var` cannot be converted into numeric because characters cannot be coerced into numeric values without some meaningful mapping.
+- `factor_var` can be converted to numeric because R will store factor values as integer internally, and `as.numeric` can convert the factor values into their corresponding integers.
+```{r problem2 - convert variables to numeric, echo = TRUE, eval = FALSE}
+#convert logical, character, and factor variables into numeric type
 df %>% pull(positive_logical_var) %>% as.numeric()
 df %>% pull(character_var) %>% as.numeric()
 df %>% pull(factor_var) %>% as.numeric()
