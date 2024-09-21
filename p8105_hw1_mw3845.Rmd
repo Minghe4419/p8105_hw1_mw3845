@@ -66,8 +66,11 @@ Here we attempt to convert `positive_logical_var`, `character_var`, and `factor_
 Logical and factor variable can be converted to numerical variables, while the character variable are converted into NAs.
 
 - `positive_logical_var` can be converted to numeric because R treats logical values as `TRUE=1` and `FALSE=0`.
-- `character_var` cannot be converted into numeric because characters cannot be coerced into numeric values without some meaningful mapping.
+- `character_var` cannot be converted into numeric because characters cannot be coerced into numeric values without some meaningful mapping for R to interpret.
 - `factor_var` can be converted to numeric because R will store factor values as integer internally, and `as.numeric` can convert the factor values into their corresponding integers.
+
+Above also explain why we will get NA while taking mean of character and factor variable. For factor variable, simply taking mean of it will result in NA because factor variables are not inherently available for numeric operations although R will assign integer to each level of the factor variables.
+
 ```{r problem2 - convert variables to numeric, echo = TRUE, eval = FALSE}
 #convert logical, character, and factor variables into numeric type
 df %>% pull(positive_logical_var) %>% as.numeric()
